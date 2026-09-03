@@ -75,10 +75,45 @@ model VerificationToken {
 }
 
 model Staff {
-  id        String   @id @default(cuid())
-  name      String
-  position  String?
-  hiredAt   DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @default(cuid())
+  name        String
+  position    String?
+  hiredAt     DateTime?
+  evaluations Evaluation[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Evaluation {
+  id        String            @id @default(cuid())
+  staffId   String
+  staff     Staff             @relation(fields: [staffId], references: [id])
+  period    String
+  status    EvaluationStatus  @default(DRAFT)
+  comment   String?
+  scores    EvaluationScore[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([staffId, period])
+}
+
+enum EvaluationStatus {
+  DRAFT
+  COMPLETED
+}
+
+model EvaluationScore {
+  id           String     @id @default(cuid())
+  evaluationId String
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  itemName     String
+  category     String
+  score        Int
+  maxScore     Int
+  displayOrder Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([evaluationId, itemName])
 }
