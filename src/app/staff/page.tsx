@@ -49,10 +49,12 @@ export default async function StaffPage() {
                   </td>
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-600">
                     {member.hiredAt
-                      ? member.hiredAt
-                          .toISOString()
-                          .slice(0, 10)
-                          .replaceAll("-", "/")
+                      ? member.hiredAt.toLocaleDateString("ja-JP", {
+                          timeZone: "Asia/Tokyo",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
                       : "未設定"}
                   </td>
                 </tr>
