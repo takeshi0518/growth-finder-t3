@@ -10,8 +10,8 @@ export const staffRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string().min(1),
-        position: z.string().optional(),
+        name: z.string().min(1, "名前を入力してください"),
+        position: z.string().min(1, "役職を入力してください").optional(),
         hiredAt: z.coerce.date().optional(),
       }),
     )
