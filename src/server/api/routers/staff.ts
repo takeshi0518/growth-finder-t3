@@ -12,7 +12,10 @@ export const staffRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1, "名前を入力してください"),
         position: z.string().min(1, "役職を入力してください").optional(),
-        hiredAt: z.coerce.date().optional(),
+        hiredAt: z
+          .string()
+          .optional()
+          .transform((v) => (v ? new Date(v) : undefined)),
       }),
     )
     .mutation(async ({ ctx, input }) => {

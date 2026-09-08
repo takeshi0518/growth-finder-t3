@@ -32,9 +32,7 @@ export default function NewStaffPage() {
           mutate({
             name,
             position: position || undefined,
-            hiredAt: hiredAt
-              ? new Date(`${hiredAt}T00:00:00+09:00`)
-              : undefined,
+            hiredAt: hiredAt || undefined,
           });
         }}
         className="mt-8 space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
