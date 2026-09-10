@@ -1,4 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const staffRouter = createTRPCRouter({
@@ -26,5 +27,13 @@ export const staffRouter = createTRPCRouter({
           hiredAt: input.hiredAt,
         },
       });
+    }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const staff = await ctx.db.staff.findUnique({ where: { id: input.id } });
+
+      if (!staff) throw new TRPCError({ code: "NOT_FOUND" });
+      return staff;
     }),
 });
