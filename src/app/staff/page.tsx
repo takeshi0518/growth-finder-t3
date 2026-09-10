@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { api } from "@/trpc/server";
 
 export default async function StaffPage() {
@@ -42,7 +44,12 @@ export default async function StaffPage() {
               {staff.map((member) => (
                 <tr key={member.id}>
                   <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
-                    {member.name}
+                    <Link
+                      href={`/staff/${member.id}`}
+                      className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                    >
+                      {member.name}
+                    </Link>
                   </td>
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-600">
                     {member.position ?? "未設定"}
