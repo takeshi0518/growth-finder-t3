@@ -1,3 +1,9 @@
+export const EVALUATION_CATEGORIES = [
+  { key: "barista", label: "バリスタ" },
+  { key: "cashier", label: "接客・レジ" },
+  { key: "cleanliness", label: "清掃・備品管理" },
+] as const;
+
 export const EVALUATION_ITEMS = [
   { itemName: "抽出技術", category: "barista", maxScore: 5, displayOrder: 1 },
   {
