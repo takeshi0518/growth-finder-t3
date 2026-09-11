@@ -25,6 +25,7 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
   );
   const [scores, setScores] = useState<Record<string, number>>(initialScores);
   const [comment, setComment] = useState(evaluation?.comment ?? "");
+  const [unselectedItems, setUnselectedItems] = useState<string[]>([]);
   const { mutate, isPending, error } = api.evaluation.save.useMutation({
     onSuccess: () => {
       router.refresh();
@@ -34,6 +35,15 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
 
   function save(status: RouterInputs["evaluation"]["save"]["status"]) {
     if (isPending) return;
+
+    if (status === "COMPLETED") {
+      const missingItems = EVALUATION_ITEMS.filter(
+        (item) => !scores[item.itemName],
+      ).map((item) => item.itemName);
+      setUnselectedItems(missingItems);
+      if (missingItems.length > 0) return;
+    }
+    setUnselectedItems([]);
 
     mutate({
       staffId,
@@ -66,7 +76,16 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
           <div className="mt-4 space-y-6">
             {EVALUATION_ITEMS.filter((item) => item.category === key).map(
               (item) => (
-                <fieldset key={item.itemName} disabled={isPending}>
+                <fieldset
+                  key={item.itemName}
+                  disabled={isPending}
+                  aria-invalid={unselectedItems.includes(item.itemName)}
+                  aria-describedby={
+                    unselectedItems.includes(item.itemName)
+                      ? `evaluation-error-item-${item.displayOrder}`
+                      : undefined
+                  }
+                >
                   <legend className="text-sm font-semibold text-gray-900">
                     {item.itemName}
                   </legend>
@@ -81,12 +100,15 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
                           type="button"
                           aria-label={`${value}点`}
                           aria-pressed={selected}
-                          onClick={() =>
+                          onClick={() => {
                             setScores((current) => ({
                               ...current,
                               [item.itemName]: value,
-                            }))
-                          }
+                            }));
+                            setUnselectedItems((current) =>
+                              current.filter((n) => n !== item.itemName),
+                            );
+                          }}
                           className={`h-10 w-10 rounded-md border text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:opacity-50 ${
                             selected
                               ? "border-gray-900 bg-gray-900 text-white hover:bg-gray-700"
@@ -98,6 +120,14 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
                       );
                     })}
                   </div>
+                  {unselectedItems.includes(item.itemName) && (
+                    <p
+                      id={`evaluation-error-item-${item.displayOrder}`}
+                      className="text-sm text-red-600"
+                    >
+                      評価を選択してください
+                    </p>
+                  )}
                 </fieldset>
               ),
             )}
