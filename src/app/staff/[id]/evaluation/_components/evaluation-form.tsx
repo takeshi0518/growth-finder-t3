@@ -26,11 +26,12 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
   const [scores, setScores] = useState<Record<string, number>>(initialScores);
   const [comment, setComment] = useState(evaluation?.comment ?? "");
   const [unselectedItems, setUnselectedItems] = useState<string[]>([]);
-  const { mutate, isPending, error } = api.evaluation.save.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const { mutate, isPending, error, isSuccess, data, reset } =
+    api.evaluation.save.useMutation({
+      onSuccess: () => {
+        router.refresh();
+      },
+    });
   const fieldErrors = error?.data?.zodError?.fieldErrors;
 
   function save(status: RouterInputs["evaluation"]["save"]["status"]) {
@@ -108,6 +109,7 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
                             setUnselectedItems((current) =>
                               current.filter((n) => n !== item.itemName),
                             );
+                            reset();
                           }}
                           className={`h-10 w-10 rounded-md border text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:opacity-50 ${
                             selected
@@ -147,7 +149,10 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
           name="comment"
           rows={5}
           value={comment}
-          onChange={(event) => setComment(event.target.value)}
+          onChange={(event) => {
+            setComment(event.target.value);
+            reset();
+          }}
           disabled={isPending}
           aria-invalid={!!fieldErrors?.comment?.length}
           aria-describedby={
@@ -191,6 +196,13 @@ export function EvaluationForm({ staffId, period, evaluation }: Props) {
         {isPending && (
           <p role="status" className="text-sm text-gray-600">
             保存中…
+          </p>
+        )}
+        {isSuccess && !isPending && (
+          <p role="status" className="text-sm text-green-600">
+            {data?.status === "COMPLETED"
+              ? "評価を確定しました"
+              : "下書きを保存しました"}
           </p>
         )}
       </div>
