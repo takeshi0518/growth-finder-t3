@@ -27,4 +27,9 @@ export const staffRouter = createTRPCRouter({
         },
       });
     }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.staff.findUnique({ where: { id: input.id } });
+    }),
 });
