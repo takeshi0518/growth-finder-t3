@@ -2,21 +2,26 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-import type { RouterOutputs } from "@/trpc/react";
-
-const staff: RouterOutputs["staff"]["getAll"] = [];
+import { api } from "@/trpc/react";
 
 export default function ClientStaffPage() {
+  const {
+    data: staff = [],
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = api.staff.getAll.useQuery();
+
   const [isEnabled, setIsEnabled] = useState(false);
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
   const [hiredAt, setHiredAt] = useState("");
 
   // TODO: useQuery の戻り値に置き換える
-  const isLoading = false;
-  const isFetching = false;
-  const isError = false;
+  // const isLoading = false;
+  // const isFetching = false;
+  // const isError = false;
 
   // TODO: useMutation の戻り値に置き換える
   const isPending = false;
