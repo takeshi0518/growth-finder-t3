@@ -5,19 +5,18 @@ import { useState } from "react";
 import { api } from "@/trpc/react";
 
 export default function ClientStaffPage() {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [name, setName] = useState("");
+  const [position, setPosition] = useState("");
+  const [hiredAt, setHiredAt] = useState("");
+
   const {
     data: staff = [],
     isLoading,
     isFetching,
     isError,
     refetch,
-  } = api.staff.getAll.useQuery();
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [name, setName] = useState("");
-  const [position, setPosition] = useState("");
-  const [hiredAt, setHiredAt] = useState("");
-
+  } = api.staff.getAll.useQuery(undefined, { enabled: isEnabled });
   // TODO: useQuery の戻り値に置き換える
   // const isLoading = false;
   // const isFetching = false;
