@@ -67,6 +67,7 @@ export default function ClientStaffPage() {
           <button
             type="button"
             className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+            onClick={() => void refetch()}
           >
             今すぐ再取得
           </button>
