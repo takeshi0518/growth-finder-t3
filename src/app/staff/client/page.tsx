@@ -10,6 +10,8 @@ export default function ClientStaffPage() {
   const [position, setPosition] = useState("");
   const [hiredAt, setHiredAt] = useState("");
 
+  const utils = api.useUtils();
+
   const {
     data: staff = [],
     isLoading,
@@ -28,8 +30,10 @@ export default function ClientStaffPage() {
     isSuccess,
     isError: isMutationError,
   } = api.staff.create.useMutation({
-    onSuccess: (createdStaff) => {
+    onSuccess: async (createdStaff) => {
       console.log("追加成功", createdStaff);
+
+      await utils.staff.getAll.invalidate();
     },
     onError: (error) => {
       console.error("追加失敗", error);
