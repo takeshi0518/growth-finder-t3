@@ -7,9 +7,17 @@ export default async function StaffPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-        スタッフ一覧
-      </h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          スタッフ一覧
+        </h1>
+        <Link
+          href="/staff/client"
+          className="inline-flex self-start rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        >
+          Client Component版へ
+        </Link>
+      </div>
 
       {staff.length === 0 ? (
         <p className="mt-8 rounded-lg border border-gray-200 bg-gray-50 px-6 py-10 text-center text-gray-600">
