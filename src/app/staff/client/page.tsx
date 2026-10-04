@@ -22,8 +22,19 @@ export default function ClientStaffPage() {
   // const isFetching = false;
   // const isError = false;
 
-  // TODO: useMutation の戻り値に置き換える
-  const isPending = false;
+  const {
+    mutate,
+    isPending,
+    isSuccess,
+    isError: isMutationError,
+  } = api.staff.create.useMutation({
+    onSuccess: (createdStaff) => {
+      console.log("追加成功", createdStaff);
+    },
+    onError: (error) => {
+      console.error("追加失敗", error);
+    },
+  });
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
@@ -214,7 +225,14 @@ export default function ClientStaffPage() {
           noValidate
           onSubmit={(event) => {
             event.preventDefault();
-            // TODO: mutateを呼び出す
+
+            if (isPending) return;
+
+            mutate({
+              name,
+              position: position || undefined,
+              hiredAt: hiredAt || undefined,
+            });
           }}
           className="mt-6 grid gap-6 sm:grid-cols-2"
         >
